@@ -1,0 +1,68 @@
+name: 'Configure GPG'
+
+inputs:
+
+  gpg-passphrase:
+    description: 'GPG Passphrase'
+    required: true
+
+  gpg-sign-key:
+    description: 'GPG sign key'
+    required: true
+
+  git-username:
+    description: 'Git username'
+    required: true
+
+  git-email:
+    description: 'Git user email'
+    required: true
+    
+runs:
+  using: "composite"
+  steps:
+  
+    - name: Start GPG Agent
+      shell: bash
+      run: |
+        gpg-agent --daemon --allow-preset-passphrase \
+          --default-cache-ttl 60 --max-cache-ttl 60
+    
+    - name: Import GPG Key
+      shell: bash
+      run: |
+        echo -n ${{ inputs.gpg-sign-key }} | base64 --decode \
+          | gpg --pinentry-mode loopback \
+            --passphrase-file <(echo ${{ inputs.gpg-passphrase }}) \
+            --import
+        GPG_FINGERPRINT=$(gpg -K --with-fingerprint \
+          | sed -n 4p | sed -e 's/ *//g')
+        echo "${GPG_FINGERPRINT}:6:" | gpg --import-ownertrust
+    
+    - name: Preset Passphrase In GPG Agent
+      shell: bash
+      run: |
+        GPG_KEYGRIP=`gpg --with-keygrip -K \
+          | sed -n '/[S]/{n;p}' \
+          | sed 's/Keygrip = //' \
+          | sed 's/ *//g'`
+        GPG_PASSPHRASE_HEX=`echo -n ${{ inputs.gpg-passphrase }} \
+          | od -A n -t x1 \
+          | tr -d ' ' | tr -d '\n'`
+        echo "PRESET_PASSPHRASE $GPG_KEYGRIP -1 $GPG_PASSPHRASE_HEX" | gpg-connect-agent
+    
+    - name: Configure Git
+      shell: bash
+      run: |
+        export CI_SIGNINGKEY_ID=$( \
+          gpg --list-signatures --with-colons \
+          | grep 'sig' \
+          | grep  ${{ inputs.git-email }} \
+          | head -n 1 \
+          | cut -d':' -f5 \
+        )
+        git config --global user.name ${{ inputs.git-username }}
+        git config --global user.email ${{ inputs.git-email }}
+        git config --global user.signingkey $CI_SIGNINGKEY_ID
+        git config --global commit.gpgsign true
+        git config --global tag.gpgsign true
