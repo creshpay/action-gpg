@@ -1,5 +1,11 @@
 name: 'Configure GPG'
 
+description: This action sets up a GPG signature for use in actions so you can have verified commits pushed from your actions.
+
+branding:
+  icon: 'lock'  
+  color: 'purple'
+
 inputs:
 
   gpg-passphrase:
