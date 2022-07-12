@@ -28,19 +28,23 @@ runs:
   using: "composite"
   steps:
 
-    - name: Stop GPG Agent if running
+    - name: Configure and either start or restart GPG agent
       shell: bash
       run: |
-        gpg-agent --quiet 2>/dev/null
-        if [[ $? == 0 ]]; then
-          killall gpg-agent
-        fi
-
-    - name: Start GPG Agent
-      shell: bash
-      run: |
-        gpg-agent --daemon --allow-preset-passphrase \
+        if [ -f /usr/lib/systemd/user/gpg-agent.service ]; then
+          mkdir ~/.gnupg
+          cat <<EOT >> ~/.gnupg/gpg-agent.conf
+          allow-preset-passphrase
+          default-cache-ttl 60
+          max-cache-ttl 50
+        EOT
+          chmod 600 ~/.gnupg/*
+          chmod 700 ~/.gnupg
+          systemctl --user restart gpg-agent
+        else
+          gpg-agent --daemon --allow-preset-passphrase \
           --default-cache-ttl 60 --max-cache-ttl 60
+        fi
 
     - name: Import GPG Key
       shell: bash
