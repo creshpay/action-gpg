@@ -3,7 +3,7 @@ name: 'Configure GPG'
 description: This action sets up a GPG signature for use in actions so you can have verified commits pushed from your actions.
 
 branding:
-  icon: 'lock'  
+  icon: 'lock'
   color: 'purple'
 
 inputs:
@@ -23,17 +23,25 @@ inputs:
   git-email:
     description: 'Git user email'
     required: true
-    
+
 runs:
   using: "composite"
   steps:
-  
+
+    - name: Stop GPG Agent if running
+      shell: bash
+      run: |
+        gpg-agent --quiet 2>/dev/null
+        if [[ $? == 0 ]]; then
+          killall gpg-agent
+        fi
+
     - name: Start GPG Agent
       shell: bash
       run: |
         gpg-agent --daemon --allow-preset-passphrase \
           --default-cache-ttl 60 --max-cache-ttl 60
-    
+
     - name: Import GPG Key
       shell: bash
       run: |
@@ -44,7 +52,7 @@ runs:
         GPG_FINGERPRINT=$(gpg -K --with-fingerprint \
           | sed -n 4p | sed -e 's/ *//g')
         echo "${GPG_FINGERPRINT}:6:" | gpg --import-ownertrust
-    
+
     - name: Preset Passphrase In GPG Agent
       shell: bash
       run: |
@@ -56,7 +64,7 @@ runs:
           | od -A n -t x1 \
           | tr -d ' ' | tr -d '\n'`
         echo "PRESET_PASSPHRASE $GPG_KEYGRIP -1 $GPG_PASSPHRASE_HEX" | gpg-connect-agent
-    
+
     - name: Configure Git
       shell: bash
       run: |
