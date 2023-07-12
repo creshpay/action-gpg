@@ -81,8 +81,8 @@ runs:
           | head -n 1 \
           | cut -d':' -f5 \
         )
-        git config --global user.name ${{ inputs.git-username }}
-        git config --global user.email ${{ inputs.git-email }}
+        git config --global user.name "${{ inputs.git-username }}"
+        git config --global user.email "${{ inputs.git-email }}"
         git config --global user.signingkey $CI_SIGNINGKEY_ID
         git config --global commit.gpgsign true
         git config --global tag.gpgsign true
