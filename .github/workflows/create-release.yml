@@ -26,7 +26,7 @@ jobs:
           git-username: "${{ secrets.CI_USER_NAME }}"
           
       - name: Create release
-        uses: cresh-io/action-conventional-release@v1
+        uses: creshpay/action-conventional-release@v1
         with:
           custom-tag: "${{ github.event.inputs.tags }}"
           github-access-token: "${{ secrets.CI_PUSH_TOKEN }}"
