@@ -1,6 +1,8 @@
-name: 'Configure GPG'
+name: 'Enable GPG Signing'
 
-description: This action sets up a GPG signature for use in actions so you can have verified commits pushed from your actions.
+description: |
+  Set up and configure git to enable GPG signing so that commits and tags
+  created within actions workflows are trusted and verified.
 
 branding:
   icon: 'lock'
