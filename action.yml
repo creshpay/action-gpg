@@ -30,22 +30,30 @@ runs:
   using: "composite"
   steps:
 
-    - name: Configure and either start or restart GPG agent
-      shell: bash
+    - name: Configure GPG Agent
+      shell: sh
       run: |
         if [ -f /usr/lib/systemd/user/gpg-agent.service ]; then
-          mkdir ~/.gnupg
-          cat <<EOT >> ~/.gnupg/gpg-agent.conf
-          allow-preset-passphrase
-          default-cache-ttl 60
-          max-cache-ttl 50
-        EOT
+          mkdir -p ~/.gnupg
+          if [ -f ~/.gnupg/gpg-agent.conf ]; then
+            TEMP_GPG_CONF=$(mktemp)
+            # awk magic merging config files together, overriding duplicate
+            awk 'NR==FNR{a[$1];if(NF&&$0!~/^#/) print $0;next} !($1 in a) && $1!~/^#/' \
+              ${GITHUB_ACTION_PATH}/config/gpg-agent.conf \
+              ~/.gnupg/gpg-agent.conf \
+              > ${TEMP_GPG_CONF}
+            mv ${TEMP_GPG_CONF} ~/.gnupg/gpg-agent.conf
+          else
+            cp ${GITHUB_ACTION_PATH}/config/gpg-agent.conf ~/.gnupg/gpg-agent.conf
+          fi
           chmod 600 ~/.gnupg/*
           chmod 700 ~/.gnupg
           systemctl --user restart gpg-agent
         else
-          gpg-agent --daemon --allow-preset-passphrase \
-          --default-cache-ttl 60 --max-cache-ttl 60
+          gpg-agent --daemon \
+            --allow-preset-passphrase \
+            --default-cache-ttl 60 \
+            --max-cache-ttl 60
         fi
 
     - name: Import GPG Key
