@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/creshpay/action-gpg/compare/v2.0.0...v2.0.1) (2023-07-13)
+
+
+### Bug Fixes
+
+* description too long ([3bb2ebd](https://github.com/creshpay/action-gpg/commit/3bb2ebdfe171019ccde6269e9724e2afc39be9bd))
+
 ## [2.0.0](https://github.com/creshpay/action-gpg/compare/v1.0.3...v2.0.0) (2023-07-13)
 
 
