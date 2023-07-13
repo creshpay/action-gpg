@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/creshpay/action-gpg/compare/v1.0.3...v2.0.0) (2023-07-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* use default `sh` shell instead of `bash`
+
+### Features
+
+* use default `sh` shell instead of `bash` ([d129a7a](https://github.com/creshpay/action-gpg/commit/d129a7aec93c065270b7467aacbec187881f65c7)), closes [#4](https://github.com/creshpay/action-gpg/issues/4)
+
+
+### Bug Fixes
+
+* handle spaces in git config values ([042947f](https://github.com/creshpay/action-gpg/commit/042947f9954d0e281f2bbe040699ce58a82d5a1c))
+* improve GPG Agent configuration ([5aaeced](https://github.com/creshpay/action-gpg/commit/5aaecedfbc021386be9df551b3f5c1ce4a3e2531))
+
+
+### Chore
+
+* **ci:** update org name ref ([8b95e32](https://github.com/creshpay/action-gpg/commit/8b95e3272beed099dcede76faba0b653c5dad60b))
+* improve title and description ([72cbfdb](https://github.com/creshpay/action-gpg/commit/72cbfdb3a7fe30d2776cf690d198ed2e2e1af7be))
+
 ### [1.0.3](https://github.com/cresh-io/action-gpg/compare/v1.0.2...v1.0.3) (2023-03-08)
 
 
