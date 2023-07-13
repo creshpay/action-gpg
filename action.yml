@@ -1,8 +1,8 @@
 name: 'Enable GPG Signing'
 
 description: |
-  Set up and configure git to enable GPG signing so that commits and tags
-  created within actions workflows are trusted and verified.
+  Set up git to enable GPG signing for commits and tags
+  created within actions workflows to be trusted and verified.
 
 branding:
   icon: 'lock'
