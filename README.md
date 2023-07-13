@@ -21,7 +21,7 @@ steps:
         token: ${{ secrets.GITHUB_TOKEN }}
 
   - name: Enable GPG
-    uses: creshpay/action-gpg@v1
+    uses: creshpay/action-gpg@v2
     with:
         gpg-passphrase: "${{ secrets.CI_GPG_PASSPHRASE }}"
         gpg-sign-key: "${{ secrets.CI_GPG_SIGN_KEY }}"
